@@ -35,6 +35,18 @@ Node* insert(Node* root,Interval p){
     return root;
 }
 
+Interval* search(Node* root, Interval p){
+	if(root==NULL) 
+		return NULL;
+	
+	if(root->p->low <= p.high && root->p->high >= p.low)
+		return root->p;
+	
+	if(root->left!=NULL && root->left->max >= p.low)
+		return search(root->left, p);
+	else
+		return search(root->right,p);
+}
 
 
 int main(){
@@ -46,5 +58,13 @@ int main(){
 		temp=insert(root,arr[i]);
 	}
 	
+	Interval x=new Interval();
+	cout<<"enter search interval"<<endl;
+	cin>>x.low>>x.high;
+	Interval* x_tree=search(root,x);
+	if(x_tree ==NULL)
+		cout<<"No such Interval"<<endl;
+	else
+		cout<<x_tree->low<<","<<x_tree->high<<endl;
 	
 }
