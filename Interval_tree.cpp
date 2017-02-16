@@ -48,6 +48,41 @@ Interval* search(Node* root, Interval p){
 		return search(root->right,p);
 }
 
+void delete_search(Node* root,Interval x){
+	
+	if(root==NULL)
+		return;
+
+	Interval* p=new Interval();
+	p=search(root,x);
+	if(p==NULL)
+	{cout<<"no such interval found"<<endl;return;}
+		
+	delete(root,x);
+}
+
+void delete(Node* root,Interval x){
+	if(root->p->low == x.high && root->p->high == x.low){
+		Node* temp=root->right;
+		root=root->left;
+		root->right=temp;
+		if(root->max < root->right->max)
+			root->max=root->right->max;
+		return;
+	}
+	if(root->left!=NULL && root->left->max >= x.low)
+		delete(root->left, x);
+	else
+		delete(root->right,x);
+}
+
+void print(Node* root){
+	if(root==NULL) return;
+	
+	print(root->left);
+	cout<<root->p->low<<","<<root->p->high<<" max= "<<root->max<<endl;
+	print(root->right);
+}
 
 int main(){
 	Interval arr[]={{15,20},{10,30}{17,19},{5,20},{12,15},{30,40}};
@@ -57,6 +92,8 @@ int main(){
 	for(int i=0;i<l;i++){
 		temp=insert(root,arr[i]);
 	}
+	cout<<"Original Tree:"<<endl;
+	print(root);
 	
 	Interval x=new Interval();
 	cout<<"enter search interval"<<endl;
@@ -66,5 +103,12 @@ int main(){
 		cout<<"No such Interval"<<endl;
 	else
 		cout<<x_tree->low<<","<<x_tree->high<<endl;
+	
+	cout<<"enter deletion interval"<<endl;
+	cin>>x.low>>x.high;
+	delete_search(root,x);
+	cout<<"After Deletion:"<<endl;
+	print(root);
+	
 	
 }
